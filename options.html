@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>GHL Tab Renamer — Settings</title>
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">G</div>
+        <div>
+          <div class="brand-name">GHL Tab Renamer</div>
+          <div class="brand-sub">Configuration Hub</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="#general" class="nav-item active" data-tab="general">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="9"/></svg>
+          General
+        </a>
+        <a href="#memory" class="nav-item" data-tab="memory">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Memory Bank
+        </a>
+        <a href="#appearance" class="nav-item" data-tab="appearance">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+          Appearance
+        </a>
+        <a href="#clients" class="nav-item" data-tab="clients">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>
+          Clients
+        </a>
+        <a href="#domains" class="nav-item" data-tab="domains">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20"/></svg>
+          Domains
+        </a>
+        <a href="#templates" class="nav-item" data-tab="templates">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+          Templates
+        </a>
+        <a href="#groupers" class="nav-item" data-tab="groupers">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Tab Groupers
+        </a>
+        <a href="#activity" class="nav-item" data-tab="activity">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 4-6"/></svg>
+          Activity
+        </a>
+      </nav>
+      <div class="sidebar-foot">Version 2.0.0 · <span class="kbd-sm">Ctrl+Shift+E</span> notes</div>
+    </aside>
+
+    <main class="main">
+      <!-- GENERAL -->
+      <section id="general-tab" class="tab active">
+        <div class="head"><h1>General</h1><p>Core behavior and tab management.</p></div>
+        <div class="card">
+          <div class="row">
+            <div class="row-info"><div class="row-title">Enable Extension</div><div class="row-desc">Globally turn all features on or off</div></div>
+            <label class="switch"><input type="checkbox" id="enabled-toggle"><span class="slider"></span></label>
+          </div>
+          <div class="div"></div>
+          <div class="row">
+            <div class="row-info"><div class="row-title">Auto-Group Tabs by Client</div><div class="row-desc">Organize GHL tabs into Chrome Tab Groups by client name</div></div>
+            <label class="switch"><input type="checkbox" id="autogroup-toggle"><span class="slider"></span></label>
+          </div>
+          <div class="sub-row" id="short-title-row" style="margin-top:14px;padding-left:18px;border-left:2px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+            <div class="row-info"><div class="row-title-sm">Shorten Tab Title When Grouped</div><div class="row-desc">Omit client name from tab title since it is already visible on the Tab Group</div></div>
+            <label class="switch"><input type="checkbox" id="short-title-toggle"><span class="slider"></span></label>
+          </div>
+          <div class="div"></div>
+          <div class="row">
+            <div class="row-info"><div class="row-title">Auto-Collapse Inactive Groups</div><div class="row-desc">Collapse other groups when switching tabs to save space</div></div>
+            <label class="switch"><input type="checkbox" id="auto-collapse-toggle"><span class="slider"></span></label>
+          </div>
+          <div class="sub-row" id="collapse-delay-row" style="margin-top:14px;padding-left:18px;border-left:2px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+            <div class="row-info"><div class="row-title-sm">Collapse Delay</div><div class="row-desc">How long to wait before collapsing inactive groups</div></div>
+            <div class="inline-input">
+              <select id="collapse-delay-select" class="select">
+                <option value="0">Instant</option>
+                <option value="5">5 seconds</option>
+                <option value="10">10 seconds</option>
+                <option value="30">30 seconds</option>
+                <option value="60">1 minute</option>
+                <option value="120">2 minutes</option>
+                <option value="300">5 minutes</option>
+              </select>
+            </div>
+          </div>
+          <div class="div"></div>
+          <div class="row">
+            <div class="row-info"><div class="row-title">RAM Saver</div><div class="row-desc">Auto-discard idle background tabs to free memory</div></div>
+            <label class="switch"><input type="checkbox" id="ram-saver-toggle"><span class="slider"></span></label>
+          </div>
+          <div class="sub-row" id="ram-duration-row">
+            <div class="row-info"><div class="row-title-sm">Idle threshold</div><div class="row-desc">Discard tabs inactive for this many minutes</div></div>
+            <div class="inline-input"><input type="number" id="ram-saver-minutes" class="num-input" min="1" max="1440"><span>min</span></div>
+          </div>
+          <div class="div"></div>
+          <div class="row">
+            <div class="row-info"><div class="row-title">Smart Grouping Suggestions</div><div class="row-desc">Suggest colors for clients you open frequently but haven't tagged</div></div>
+            <label class="switch"><input type="checkbox" id="smart-suggestions-toggle"><span class="slider"></span></label>
+          </div>
+          <div class="div"></div>
+          <div class="row">
+            <div class="row-info"><div class="row-title">Sort Groups A-Z</div><div class="row-desc">Keep Chrome tab groups alphabetically sorted by client name</div></div>
+            <label class="switch"><input type="checkbox" id="sort-alpha-toggle"><span class="slider"></span></label>
+          </div>
+        </div>
+
+        <!-- Asana Integration Card -->
+        <div class="card">
+          <div class="sub-title">📌 Asana Integration</div>
+          <p style="font-size:12.5px;color:var(--muted);margin-bottom:14px;line-height:1.4">
+            Connect to Asana to automatically pull in project tasks and subtasks assigned to you matching the active Client name.
+          </p>
+          <div class="col" style="gap:12px">
+            <div class="col">
+              <label class="lbl">Asana Personal Access Token (PAT)</label>
+              <div class="add-form">
+                <input type="password" id="asana-token-input" class="text-input" placeholder="0/1204812048120...">
+                <button id="asana-connect-btn" class="btn-primary" style="padding: 10px 22px;">Connect</button>
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="col">
+                <label class="lbl">Workspace</label>
+                <select id="asana-workspace-select" class="select"><option value="">Select workspace...</option></select>
+              </div>
+              <div class="col">
+                <label class="lbl">Status</label>
+                <div id="asana-status-badge" style="font-size:12.5px;font-weight:600;color:var(--muted);margin-top:10px">Not connected</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="row-info"><div class="row-title">Title Format Template</div><div class="row-desc">Customize tab titles. Click a token to insert it.</div></div>
+          <div class="tokens">
+            <button class="token" data-token="{client}">🏢 {client}</button>
+            <button class="token" data-token="{section}">📍 {section}</button>
+            <button class="token" data-token="{unread}">✉️ {unread}</button>
+          </div>
+          <input type="text" id="title-template" class="text-input" placeholder="{client} | {section}">
+          <div class="preview"><span class="preview-label">Live preview:</span><span class="preview-val" id="title-preview">Acme Corp | Contacts</span></div>
+        </div>
+      </section>
+
+      <!-- MEMORY BANK -->
+      <section id="memory-tab" class="tab">
+        <div class="head">
+          <h1>Professional Memory Bank</h1>
+          <p>Autonomous work telemetry, skills computation, and proof of work harvested from your browser.</p>
+        </div>
+        
+        <!-- Profile Card & Stats -->
+        <div class="grid-2">
+          <div class="card" style="margin-bottom:0">
+            <div class="mb-profile-header">
+              <div class="mb-profile-avatar">J</div>
+              <div>
+                <h2 id="mb-profile-name" style="font-size:16px;font-weight:700">Jmasis23</h2>
+                <div id="mb-profile-title" style="font-size:12px;color:var(--accent);font-weight:600;margin-top:2px">LeadJuice Automation Architect</div>
+              </div>
+            </div>
+            <div class="div" style="margin:14px 0"></div>
+            <p id="mb-profile-bio" style="font-size:12.5px;color:var(--muted);line-height:1.5">Learning your focus areas as you work in GHL...</p>
+          </div>
+          
+          <div class="card" style="margin-bottom:0;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;align-items:center;padding:18px">
+            <div class="mb-counter">
+              <div class="mb-counter-val" id="mb-telemetry-hours">0h</div>
+              <div class="mb-counter-lbl">Hours Logged</div>
+            </div>
+            <div class="mb-counter">
+              <div class="mb-counter-val" id="mb-telemetry-clients">0</div>
+              <div class="mb-counter-lbl">Clients Scaled</div>
+            </div>
+            <div class="mb-counter">
+              <div class="mb-counter-val" id="mb-telemetry-streak" style="color:var(--amber)">1d</div>
+              <div class="mb-counter-lbl">Work Streak</div>
+            </div>
+          </div>
+        </div>
+        
+        <div style="height:20px"></div>
+        
+        <!-- Skills Matrix & Discovered Clients -->
+        <div class="grid-2">
+          <div class="card" style="margin-bottom:0">
+            <div class="sub-title">🤖 Computed Skills Distribution</div>
+            <div id="mb-skills-list" style="display:flex;flex-direction:column;gap:14px">
+              <div class="empty-state">No automated skills tracked yet. Keep working in GHL!</div>
+            </div>
+          </div>
+          
+          <div class="card" style="margin-bottom:0">
+            <div class="sub-title">🏢 Sub-Account Highlights</div>
+            <div id="mb-clients-list" style="display:flex;flex-direction:column;gap:10px">
+              <div class="empty-state">No client metrics recorded yet.</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Portfolio Engine & JSON Export -->
+        <div class="card">
+          <div class="row">
+            <div class="row-info">
+              <div class="row-title">Portfolio &amp; Landing Page Engine</div>
+              <div class="row-desc">Copy your self-improving Memory Bank JSON payload to feed your external landing page or resume website.</div>
+            </div>
+            <button class="btn-primary" id="mb-export-btn">Copy JSON Payload</button>
+          </div>
+          <div class="div"></div>
+          <div class="sub-title">Live Memory Bank JSON</div>
+          <pre id="mb-json-preview" style="font-family:var(--mono);font-size:11px;background:var(--surface-2);padding:14px;border-radius:var(--radius-sm);max-height:160px;overflow-y:auto;color:#10b981;border:1px solid rgba(16,185,129,0.15)"></pre>
+        </div>
+      </section>
+
+      <!-- APPEARANCE -->
+      <section id="appearance-tab" class="tab">
+        <div class="head"><h1>Appearance</h1><p>Customize the floating badge and notepad styling.</p></div>
+        <div class="card">
+          <div class="grid-2">
+            <div class="col"><label class="lbl">Theme</label><select id="theme-select" class="select"><option value="dark">Dark</option><option value="light">Light</option><option value="auto">Auto (match GHL)</option></select></div>
+            <div class="col"><label class="lbl">Badge Position</label><select id="position-select" class="select"><option value="top-left">Top Left</option><option value="top-center">Top Center</option><option value="top-right" selected>Top Right</option><option value="bottom-left">Bottom Left</option><option value="bottom-center">Bottom Center</option><option value="bottom-right">Bottom Right</option><option value="bottom-tab">Bottom Dock (Tab)</option></select></div>
+          </div>
+          <div class="div"></div>
+          <div class="grid-2">
+            <div class="col"><label class="lbl">Badge Size</label><select id="size-select" class="select"><option value="small">Small</option><option value="medium" selected>Medium</option><option value="large">Large</option></select></div>
+            <div class="col"><label class="lbl">Opacity</label><div class="slider-row"><input type="range" id="opacity-slider" min="0.1" max="1" step="0.05" class="range"><span id="opacity-val" class="mono">95%</span></div></div>
+          </div>
+          <div class="div"></div>
+          <div class="row"><div class="row-info"><div class="row-title">Auto-Hide Badge</div><div class="row-desc">Fade the badge out until hovered</div></div><label class="switch"><input type="checkbox" id="autohide-toggle"><span class="slider"></span></label></div>
+          <div class="div"></div>
+          <div class="row"><div class="row-info"><div class="row-title">Leadjuice Only Mode</div><div class="row-desc">Show the floating badge and notepad only on Leadjuice domains</div></div><label class="switch"><input type="checkbox" id="only-leadjuice-toggle"><span class="slider"></span></label></div>
+          <div class="div"></div>
+          <div class="row"><div class="row-info"><div class="row-title">Note Reminders</div><div class="row-desc">Set snooze timers on pinned notes; chip pulses when due</div></div><label class="switch"><input type="checkbox" id="reminders-toggle"><span class="slider"></span></label></div>
+          <div class="div"></div>
+          <div class="row"><div class="row-info"><div class="row-title">Undo History</div><div class="row-desc">Press Ctrl/Cmd+Z in the notepad to step back through edits</div></div><label class="switch"><input type="checkbox" id="undo-toggle"><span class="slider"></span></label></div>
+          <div class="div"></div>
+          <div class="row"><div class="row-info"><div class="row-title">Template Variables</div><div class="row-desc">Substitute {client} {date} {section} {user} in templates</div></div><label class="switch"><input type="checkbox" id="tplvars-toggle"><span class="slider"></span></label></div>
+          <div class="div"></div>
+          <div class="row"><div class="row-info"><div class="row-title">Sync Notes Across Devices</div><div class="row-desc">Mirror notes to Chrome Sync (limited to ~8KB per client)</div></div><label class="switch"><input type="checkbox" id="sync-toggle"><span class="slider"></span></label></div>
+        </div>
+      </section>
+
+      <!-- CLIENTS -->
+      <section id="clients-tab" class="tab">
+        <div class="head"><h1>Clients</h1><p>Identity colors and nicknames for your sub-accounts. Bulk actions below.</p></div>
+        <div class="card">
+          <div class="bulk-bar">
+            <div class="bulk-info"><span id="client-count">0</span> clients</div>
+            <div class="bulk-actions">
+              <button class="btn-sm" id="bulk-export">Export Selected</button>
+              <button class="btn-sm danger" id="bulk-clear">Clear Colors</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th class="check"><input type="checkbox" id="select-all"></th><th>Client</th><th>Location ID</th><th>Nickname</th><th>Icon</th><th>Color</th><th>Group Color</th><th></th></tr></thead>
+              <tbody id="clients-tbody"></tbody>
+            </table>
+          </div>
+          <div class="empty-state" id="no-clients">No clients discovered yet. Open a GHL dashboard to sync clients here.</div>
+        </div>
+      </section>
+
+      <!-- DOMAINS -->
+      <section id="domains-tab" class="tab">
+        <div class="head"><h1>White-Label Domains</h1><p>Add custom GHL domains so the renamer runs on them.</p></div>
+        <div class="card">
+          <div class="add-form"><input type="text" id="new-domain" class="text-input" placeholder="app.myagency.com"><button id="add-domain" class="btn-primary">Add Domain</button></div>
+          <div class="err" id="domain-err"></div>
+          <div class="div"></div>
+          <div class="sub-title">Monitored Domains</div>
+          <ul id="domains-list" class="list"></ul>
+        </div>
+      </section>
+
+      <!-- TEMPLATES -->
+      <section id="templates-tab" class="tab">
+        <div class="head"><h1>Note Templates</h1><p>Reusable markdown templates. Variables: <code>{client}</code> <code>{date}</code> <code>{section}</code> <code>{user}</code></p></div>
+        <div class="card">
+          <div class="tpl-form">
+            <input type="text" id="tpl-name" class="text-input" placeholder="Template name (e.g. Audit Checklist)">
+            <textarea id="tpl-text" class="textarea" placeholder="## Audit&#10;- [ ] Verify lead flow&#10;- [ ] Check billing"></textarea>
+            <button id="add-tpl" class="btn-primary">Create Template</button>
+          </div>
+          <div class="div"></div>
+          <div class="sub-title">Custom Templates</div>
+          <div id="tpl-list" class="tpl-grid"></div>
+        </div>
+      </section>
+
+      <!-- GROUPERS -->
+      <section id="groupers-tab" class="tab">
+        <div class="head"><h1>Tab Groupers</h1><p>Auto-organize non-GHL tabs into Chrome Tab Groups by URL pattern.</p></div>
+        <div class="card">
+          <div class="row"><div class="row-info"><div class="row-title">Enable Custom Groupers</div><div class="row-desc">Apply URL-based grouping rules below</div></div><label class="switch"><input type="checkbox" id="groupers-toggle"><span class="slider"></span></label></div>
+        </div>
+        <div class="card">
+          <div class="sub-title">Add Grouper Rule</div>
+          <div class="grouper-form">
+            <div class="col"><label class="lbl-sm">Group Title</label><input type="text" id="grouper-name" class="text-input" placeholder="Asana"></div>
+            <div class="col"><label class="lbl-sm">URL Contains</label><input type="text" id="grouper-pattern" class="text-input" placeholder="asana.com"></div>
+            <div class="col"><label class="lbl-sm">Color</label><select id="grouper-color" class="select"><option value="grey">Grey</option><option value="blue">Blue</option><option value="red">Red</option><option value="yellow">Yellow</option><option value="green" selected>Green</option><option value="pink">Pink</option><option value="purple">Purple</option><option value="cyan">Cyan</option><option value="orange">Orange</option></select></div>
+            <button id="add-grouper" class="btn-primary">Add Rule</button>
+          </div>
+          <div class="err" id="grouper-err"></div>
+        </div>
+        <div class="card">
+          <div class="sub-title">Active Rules</div>
+          <div class="table-wrap"><table class="table"><thead><tr><th>Group Title</th><th>URL Pattern</th><th>Color</th><th>Enabled</th><th></th></tr></thead><tbody id="groupers-tbody"></tbody></table></div>
+          <div class="empty-state" id="no-groupers" style="display:none">No custom groupers yet. Add one above.</div>
+        </div>
+      </section>
+
+      <!-- ACTIVITY -->
+      <section id="activity-tab" class="tab">
+        <div class="head"><h1>Activity Dashboard</h1><p>Time spent per client. Useful for billing and capacity planning.</p></div>
+        <div class="card">
+          <div class="activity-summary" id="activity-summary"></div>
+          <div class="div"></div>
+          <div class="activity-contrib-wrap">
+            <div class="row" style="margin-bottom:14px">
+              <div class="row-info">
+                <div class="sub-title" style="margin-bottom:0">Productivity Heatmap</div>
+              </div>
+              <!-- Filters -->
+              <div style="display:flex;gap:10px;align-items:center">
+                <select id="contrib-client-filter" class="select" style="padding:4px 8px;font-size:11px;min-width:140px;cursor:pointer;margin-top:0"></select>
+                <select id="contrib-hour-filter" class="select" style="padding:4px 8px;font-size:11px;cursor:pointer;margin-top:0">
+                  <option value="0">All Active Days</option>
+                  <option value="0.5">Min 30 mins</option>
+                  <option value="1">Min 1.0 hour</option>
+                  <option value="2">Min 2.0 hours</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="contrib-heatmap-card" style="background:#0d1117;border:1px solid #21262d;border-radius:6px;padding:16px 20px;display:flex;flex-direction:column;gap:4px;">
+              <div class="contrib-months-header" id="contrib-months-header" style="display:flex;padding-left:35px;font-size:10px;color:#8b949e;justify-content:space-between;max-width:720px;font-family:var(--mono);"></div>
+              <div style="display:flex;gap:8px">
+                <div class="contrib-days-labels" style="display:flex;flex-direction:column;justify-content:space-around;font-size:10px;color:#8b949e;padding:4px 0;height:84px;font-family:var(--mono);">
+                  <span>Mon</span>
+                  <span>Wed</span>
+                  <span>Fri</span>
+                </div>
+                <div class="contrib-grid-wrapper" id="contrib-grid-wrapper" style="display:flex;gap:3px;overflow-x:auto;padding-bottom:5px"></div>
+              </div>
+              <div class="contrib-footer" style="display:flex;justify-content:space-between;font-size:11px;color:#8b949e;margin-top:6px;align-items:center">
+                <span id="contrib-total-days">0 active days in the last year</span>
+                <div style="display:flex;align-items:center;gap:4px">
+                  <span>Less</span>
+                  <span class="contrib-legend-cell level-0"></span>
+                  <span class="contrib-legend-cell level-1"></span>
+                  <span class="contrib-legend-cell level-2"></span>
+                  <span class="contrib-legend-cell level-3"></span>
+                  <span class="contrib-legend-cell level-4"></span>
+                  <span>More</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="div"></div>
+          <div class="sub-title">Top Clients This Week</div>
+          <div id="activity-clients" class="client-activity-list"></div>
+          <div class="empty-state" id="no-activity">No activity recorded yet. Use the extension on GHL pages to start tracking.</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast">Saved</div>
+  <script src="utils.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

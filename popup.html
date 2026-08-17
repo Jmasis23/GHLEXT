@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>GHL Tab Renamer</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- Header -->
+    <header class="hdr">
+      <div class="hdr-left">
+        <div class="logo">G</div>
+        <div>
+          <div class="hdr-title">GHL Tab Renamer</div>
+          <div class="hdr-sub" id="status-text">Active</div>
+        </div>
+      </div>
+      <div class="hdr-right">
+        <label class="switch" title="Enable / disable">
+          <input type="checkbox" id="enabled-toggle" />
+          <span class="slider"></span>
+        </label>
+        <button class="icon-btn" id="settings-btn" title="Open settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Current client card -->
+    <section class="card client-card" id="client-card">
+      <div class="client-head">
+        <span class="avatar" id="client-avatar">G</span>
+        <div class="client-meta">
+          <div class="client-name" id="client-name">Reading…</div>
+          <div class="client-section" id="client-section">—</div>
+        </div>
+        <span class="unread" id="client-unread" style="display:none">0</span>
+      </div>
+      <div class="client-title" id="client-title">…</div>
+      <div class="client-stats">
+        <div class="stat">
+          <div class="stat-label">Active Today</div>
+          <div class="stat-val mono" id="time-today">00:00:00</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Total Unread</div>
+          <div class="stat-val mono" id="total-unread">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Open Tabs</div>
+          <div class="stat-val mono" id="open-tabs">0</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Smart suggestions -->
+    <section class="suggestions" id="suggestions-section" style="display:none">
+      <div class="sec-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/></svg>
+        Suggestions
+      </div>
+      <div id="suggestions-list"></div>
+    </section>
+
+    <!-- Recent clients -->
+    <section class="section">
+      <div class="sec-title">Recent Sub-Accounts</div>
+      <div class="recents" id="recents-list">
+        <div class="empty">No recent clients yet.</div>
+      </div>
+    </section>
+
+    <!-- Activity mini-dashboard -->
+    <section class="section">
+      <div class="sec-title">This Week</div>
+      <div class="activity" id="activity-chart"></div>
+    </section>
+
+    <!-- Actions -->
+    <section class="section">
+      <div class="sec-title">Backup &amp; Session</div>
+      <div class="action-grid">
+        <button class="btn" id="export-notes-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+          Export Notes
+        </button>
+        <label class="btn" for="import-notes-file">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>
+          Import Notes
+          <input type="file" id="import-notes-file" accept=".json" hidden />
+        </label>
+        <button class="btn" id="export-session-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-7l-2-3H5a2 2 0 0 0-2 2z"/></svg>
+          Save Session
+        </button>
+        <label class="btn" for="import-session-file">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-7l-2-3H5a2 2 0 0 0-2 2z"/></svg>
+          Load Session
+          <input type="file" id="import-session-file" accept=".json" hidden />
+        </label>
+      </div>
+    </section>
+
+    <footer class="ftr">
+      <span class="kbd">Ctrl+Shift+E</span> notes
+      <span class="dot">·</span>
+      <span class="kbd">Ctrl+Shift+K</span> palette
+    </footer>
+  </div>
+
+  <script src="utils.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

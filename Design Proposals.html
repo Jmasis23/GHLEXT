@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GHL Tab Renamer — Design Proposals</title>
+<style>
+:root {
+  --bg: #07080b;
+  --surface: #0f111a;
+  --surface-2: #141722;
+  --border: rgba(255,255,255,0.07);
+  --border-soft: rgba(255,255,255,0.04);
+  --text: #e2e8f0;
+  --muted: #8899aa;
+  --faint: #556677;
+  --accent: #8b5cf6;
+  --accent-soft: rgba(139,92,246,0.14);
+  --accent-glow: rgba(139,92,246,0.25);
+  --green: #10b981;
+  --red: #f43f5e;
+  --amber: #f59e0b;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, sans-serif;
+  --mono: 'SF Mono', 'JetBrains Mono', ui-monospace, monospace;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  padding: 32px 40px;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
+h2 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.subtitle { color: var(--muted); font-size: 13px; margin-bottom: 36px; }
+
+.proposal { margin-bottom: 48px; }
+.proposal-header {
+  display: flex; align-items: baseline; gap: 12px;
+  margin-bottom: 16px;
+}
+.proposal-header .tag {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.05em; padding: 2px 8px; border-radius: 4px;
+}
+.tag-conservative { background: rgba(16,185,129,0.12); color: var(--green); }
+.tag-fit { background: rgba(139,92,246,0.12); color: var(--accent); }
+.tag-divergent { background: rgba(245,158,11,0.12); color: var(--amber); }
+
+.variants {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.variant {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  position: relative;
+  transition: border-color 0.2s;
+}
+.variant:hover { border-color: var(--accent); }
+.variant-label {
+  font-size: 11px; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.04em;
+  margin-bottom: 14px;
+}
+
+/* ── Chip Variants ── */
+.chip-demo {
+  display: flex; align-items: center; gap: 9px;
+  padding: 7px 13px 7px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(16px);
+  color: var(--text);
+  font-size: 13px; font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.5);
+  position: relative;
+  overflow: hidden;
+}
+.chip-dot { width:9px; height:9px; border-radius:50%; background:var(--accent); flex-shrink:0; }
+.chip-sep { color: var(--faint); }
+.chip-section { color: var(--muted); font-weight: 500; }
+
+/* Variant A: Pill (current baseline) */
+.chip-pill { }
+
+/* Variant B: Mini Card */
+.chip-card {
+  flex-direction: column; align-items: flex-start; gap: 2px;
+  padding: 8px 14px; border-radius: 10px;
+}
+.chip-card .chip-row { display:flex; align-items:center; gap:7px; }
+.chip-card .chip-sub { font-size:10px; font-weight:500; color:var(--muted); margin-left:16px; }
+
+/* Variant C: Glass Strip */
+.chip-glass {
+  border-radius: 8px; border-color: rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(24px);
+  padding: 6px 14px; gap: 7px;
+}
+.chip-glass .chip-dot { width:7px; height:7px; }
+
+/* Variant D: Split Accent */
+.chip-split {
+  padding-left: 0; border-radius: 10px;
+}
+.chip-split .chip-accent-bar {
+  width: 3px; align-self: stretch; border-radius: 99px;
+  background: var(--accent); margin-right: 4px;
+}
+
+/* Variant E: Compact Dot Only */
+.chip-dot-only {
+  padding: 8px; gap: 0; border-radius: 50%;
+  min-width: 0; width: 34px; height: 34px;
+  justify-content: center;
+  cursor: pointer;
+}
+.chip-dot-only .chip-dot { width: 14px; height: 14px; }
+.chip-dot-only .chip-badge-count {
+  position: absolute; top: -4px; right: -6px;
+  min-width: 16px; height: 16px; border-radius: 99px;
+  background: var(--red); color: #fff;
+  font-size: 9px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 4px;
+}
+
+/* Variant F: Floating Tab */
+.chip-tab {
+  border-radius: 10px 10px 0 0; border-bottom: none;
+  padding: 6px 16px; gap: 8px;
+  background: var(--surface);
+  box-shadow: 0 -4px 16px rgba(0,0,0,0.3);
+}
+.chip-tab .chip-dot { width: 8px; height: 8px; }
+
+/* ── Panel Variants ── */
+.panel-demo {
+  width: 308px; border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: rgba(0,0,0,0.92);
+  backdrop-filter: blur(24px);
+  box-shadow: 0 16px 44px rgba(0,0,0,0.6);
+  overflow: hidden;
+  font-size: 11px;
+}
+.panel-hdr {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px; border-bottom: 1px solid var(--border-soft);
+}
+.panel-avatar {
+  width: 26px; height: 26px; border-radius: 8px;
+  background: var(--accent); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; flex-shrink: 0;
+}
+.panel-name { font-size:12px; font-weight:600; flex:1; }
+.panel-body { padding: 10px 12px; min-height: 80px; color: var(--muted); }
+.panel-btn {
+  width: 28px; height: 28px; border: none; background: none;
+  color: var(--muted); border-radius: 8px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+.panel-btn:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+
+/* Panel Variant B: Drawer */
+.panel-drawer {
+  width: 100%; max-width: 360px;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+/* Panel Variant C: Sidebar */
+.panel-sidebar {
+  height: 100%; width: 320px;
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+/* ── Quick Nav Variants ── */
+.nav-demo {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 4px;
+  padding: 8px; background: rgba(0,0,0,0.9);
+  border: 1px solid var(--border); border-radius: 8px;
+  width: 260px; box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+.nav-btn {
+  background: none; border: none; color: var(--text);
+  font-size: 10px; font-weight: 500; padding: 5px 6px;
+  border-radius: 4px; cursor: pointer; text-align: center;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  transition: background 0.15s;
+}
+.nav-btn:hover { background: rgba(255,255,255,0.06); color: var(--accent); }
+
+/* Nav Variant B: List */
+.nav-list {
+  display: flex; flex-direction: column; gap: 2px;
+  width: 180px; padding: 4px;
+}
+.nav-list .nav-btn { text-align: left; padding: 6px 10px; font-size: 11px; }
+
+/* Nav Variant C: Icon Grid */
+.nav-icons {
+  grid-template-columns: repeat(6,1fr); gap: 6px; width: 300px;
+}
+.nav-icons .nav-btn { font-size: 9px; padding: 6px 2px; }
+
+/* ── Command Palette Mock ── */
+.palette-demo {
+  width: 440px; border-radius: 8px; overflow: hidden;
+  background: var(--surface); border: 1px solid var(--border);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+}
+.palette-input {
+  width: 100%; padding: 14px 18px; border: none;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg); color: var(--text);
+  font-size: 14px; font-family: var(--font); outline: none;
+}
+.palette-input::placeholder { color: var(--faint); }
+.palette-results { padding: 4px; }
+.palette-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; border-radius: 6px; cursor: pointer;
+  font-size: 12px; transition: background 0.1s;
+}
+.palette-item:hover, .palette-item.selected { background: var(--accent-soft); }
+.palette-item .key { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-left: auto; }
+
+/* ── Tweak controls ── */
+.tweaks {
+  position: fixed; bottom: 20px; right: 20px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 14px;
+  display: flex; flex-direction: column; gap: 10px;
+  font-size: 12px; z-index: 100; min-width: 180px;
+}
+.tweaks label { display:flex; align-items:center; gap:8px; cursor:pointer; color:var(--muted); }
+.tweaks label:hover { color: var(--text); }
+.tweak-toggle { display:none; }
+.tweak-toggle:checked + .tweak-dot { background:var(--accent); }
+.tweak-dot {
+  width:14px; height:14px; border-radius:4px;
+  border:1px solid var(--border); flex-shrink:0;
+  transition: background 0.15s;
+}
+
+@media(max-width: 900px) {
+  body { padding: 20px 16px; }
+  .variants { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<h1>GHL Tab Renamer — Design Proposals</h1>
+<p class="subtitle">Three categories × three variants each. Conservative → Strong-fit → Divergent. Toggle the Tweaks panel to compare themes.</p>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PROPOSAL 1: FLOATING CHIP REDESIGN        -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="proposal">
+  <div class="proposal-header">
+    <h2>1. Floating Chip</h2>
+    <span style="color:var(--muted);font-size:12px;">The primary touchpoint — visible on every GHL page</span>
+  </div>
+  <div class="variants">
+
+    <!-- A: Pill (current baseline) -->
+    <div class="variant">
+      <div class="variant-label"><span class="tag tag-conservative">Conservative</span> Pill — current design, refined</div>
+      <div class="chip-demo chip-pill">
+        <span class="chip-dot"></span>
+        <span>Premier Wellness</span>
+        <span class="chip-sep">·</span>
+        <span class="chip-section">Dashboard</span>
+        <span style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-left:auto;">01:23</span>
+        <button style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;">▾</button>
+      </div>
+      <p style="font-size:11px;color:var(--faint);margin-top:12px;line-height:1.5">
+        Same structure, tighter spacing. Smaller dot (9px). Timer uses tabular numbers. Chevron for expand. Already keyboard-accessible. Safe choice.
+      </p>
+    </div>
+
+    <!-- B: Mini Card -->
+    <div class="variant">
+      <div class="variant-label"><span class="tag tag-fit">Strong-Fit</span> Mini Card — stacked info</div>
+      <div class="chip-demo chip-card">
+        <div class="chip-row">
+          <span class="chip-dot"></span>
+          <span>Premier Wellness Florida</span>
+          <span style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-left:auto;">01:23</span>
+        </div>
+        <div class="chip-sub">Dashboard · 3 unread · 8 tabs open</div>
+      </div>
+      <p style="font-size:11px;color:var(--faint);margin-top:12px;line-height:1.5">
+        Two-line layout shows more context at a glance — section, unread count, open tabs. Slightly taller but richer. Collapse still shrinks to dot.
+      </p>
+    </div>
+
+    <!-- C: Glass Strip -->
+    <div class="variant">
+      <div class="variant-label"><span class="tag tag-divergent">Divergent</span> Glass Strip — translucent, minimal</div>
+      <div class="chip-demo chip-glass">
+        <span class="chip-dot"></span>
+        <span>Premier Wellness</span>
+        <span class="chip-sep">·</span>
+        <span class="chip-section">Dashboard</span>
+        <span style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-left:2px;">01:23</span>
+      </div>
+      <p style="font-size:11px;color:var(--faint);margin-top:12px;line-height:1.5">
+        Lower visual weight. Glass surface blends into the page. Smaller dot, no border accent. Works well on light backgrounds. Less distracting for long sessions.
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PROPOSAL 1b: More chip variants           -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="proposal" style="margin-top:-24px">
+  <div class="variants">
+
+    <!-- D: Split Accent -->
+    <div class="variant">
+      <div class="variant-label"><span class="tag tag-fit">Strong-Fit</span> Split Accent — color bar + text</div>
+      <div class="chip-demo chip-split">
+        <span class="chip-accent-bar"></span>
+        <span>Premier Wellness</span>
+        <span class="chip-sep">·</span>
+        <span class="chip-section">Dashboard</span>
+        <span style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-left:auto;">01:23</span>
+      </div>
+      <p style="font-size:11px;color:var(--faint);margin-top:12px;line-height:1.5">
+        Left accent bar matches client color. Stronger color identity. Bar = client, dot = status (pulses for unread). Two visual signals, one element.
+      </p>
+    </div>
+
+    <!-- E: Dot Only (current collapsed state, refined) -->
+    <div class="variant">
+      <div class="variant-label"><span class="tag tag-conservative">Conservative</span> Dot Only — collapsed, with badge</div>
+      <div class="chip-demo chip-dot-only">
+        <span class="chip-dot"></span>
+        <span class="chip-badge-count">3</span>
+      </div>
+      <p style="font-size:11px;color:var(--faint);margin-top:12px;line-height:1.5">
+        Already implemented. Red badge shows unread count even when collapsed. Click expands. Keyboard accessible. Refine: pulse animation on the dot for active timer.
+      </p>
+    </div>
+
+    <!-- F: Floating Tab -->
+    <div class="variant">
+      <div class="variant-label"><span class="tag tag-divergent">Divergent</span> Floating Tab — bottom-docked</div>
+      <div class="chip-demo chip-tab">
+        <span class="chip-dot"></span>
+        <span>Premier Wellness</span>
+        <span class="chip-sep">·</span>
+        <span class="chip-section">Dashboard</span>
+      </div>
+      <p style="font-size:11px;color:var(--faint);margin-top:12px;line-height:1.5">
+        Tab shape suggested a docked panel beneath. Rests at page bottom. Pushes GHL content up slightly. Feels more integrated than floating. Risky — GHL layout may fight it.
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PROPOSAL 2: NOTES PANEL LAYOUTS           -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="proposal">
+  <div class="proposal-header">
+    <h2>2. Notes Panel</h2>
+    <span style="color:var(--muted);font-size:12px;">The per-client workspace — notes, templates, Asana, bookmarks</span>
+  </div>
+  <div class="variants">
+
+    <!-- A: Floating Card (current) -->
+    <div class="variant">
+      <div class="variant-label"><span class="tag tag-conservative">Conservative</span> Floating Card — current, refined</div>
+      <div class="panel-demo">
+        <div class="panel-hdr">
+          <span class="panel-avatar">P</span>
+          <span class="panel-name">Premier Wellness Florida</span>
+          <button class="panel-btn" style="margin-left:auto;">⭐</button>
+          <button class="panel-btn">🕐</button>
+          <button class="panel-btn">✕</button>
+        </div>
+        <div class="panel-body">
+          ## Onboarding<br>
+          - [ ] Account setup<br>
+          - [x] Integrations configured<br>
+          - [ ] Welcome email sent
+        </div>
+      </div>
+      <p style="font-size:11px;color:var(--faint);margin-top:12px;line-height:1.5">
+        Drops down from chip. Resizable (left + bottom edges). Multi-note tabs. Works. Familiar. Add: drag to reposition independently of chip.
+      </p>
+    </div>
+
+    <!-- B: Bottom Drawer -->
+    <div class="variant">
+      <div class="variant-label"><span class="tag tag-fit">Strong-Fit</span> Bottom Drawer — slides up from page edge</div>
+      <div class="panel-demo panel-drawer">
+        <div class="panel-hdr">
+          <span class="panel-avatar">P</span>
+          <span class="panel-name">Premier Wellness Florida</span>
+          <button class="panel-btn" style="margin-left:auto;">✕</button>
+        </div>
+        <div class="panel-body">
+          Slides up from bottom of viewport. Full-width, fixed height. Feels native — like Chrome DevTools drawer. Notes stay visible while scrolling GHL page. Can be collapsed to a slim bar.
+        </div>
+      </div>
+      <p style="font-size:11px;color:var(--faint);margin-top:12px;line-height:1.5">
+        Better for long notes — doesn't float over content. Resize vertically by dragging top edge. Always accessible, never lost behind other windows.
+      </p>
+    </div>
+
+    <!-- C: Sidebar Panel -->
+    <div class="variant">
+      <div class="variant-label"><span class="tag tag-divergent">Divergent</span> Side Panel — docks to right edge</div>
+      <div class="panel-demo panel-sidebar" style="height:160px;">
+        <div class="panel-hdr">
+          <span class="panel-avatar">P</span>
+          <span class="panel-name">Premier Wellness</span>
+          <button class="panel-btn" style="margin-left:auto;">✕</button>
+        </div>
+        <div class="panel-body">
+          Pushes GHL content left. Full-height. Feels like VS Code sidebar. Notes + Asana tabs visible simultaneously. Resize by dragging left edge. Persistent across page navigation within same client.
+        </div>
+      </div>
+      <p style="font-size:11px;color:var(--faint);margin-top:12px;line-height:1.5">
+        Most immersive — treats notes as a permanent workspace, not a popup. High risk: GHL layout may break. Requires pushing page content with CSS. Ambitious but powerful.
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PROPOSAL 3: QUICK NAV + COMMAND PALETTE   -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="proposal">
+  <div class="proposal-header">
+    <h2>3. Navigation &amp; Commands</h2>
+    <span style="color:var(--muted);font-size:12px;">Quick section nav + global command palette</span>
+  </div>
+  <div class="variants">
+
+    <!-- A: Grid (current) -->
+    <div class="variant">
+      <div class="variant-label"><span class="tag tag-conservative">Conservative</span> Grid Dropdown — current, refined</div>
+      <div class="nav-demo">
+        <button class="nav-btn">Dashboard</button><button class="nav-btn">Conversations</button><button class="nav-btn">Contacts</button>
+        <button class="nav-btn">Opportunities</button><button class="nav-btn">Workflows</button><button class="nav-btn">Automation</button>
+        <button class="nav-btn">Funnels</button><button class="nav-btn">Sites</button><button class="nav-btn">Settings</button>
+      </div>
+      <p style="font-size:11px;color:var(--faint);margin-top:12px;line-height:1.5">
+        3-column grid of all 26 sections. Drops from chip ▼. Click navigates. Add: fuzzy search filter at top, keyboard arrow nav, frequent sections highlighted.
+      </p>
+    </div>
+
+    <!-- B: List -->
+    <div class="variant">
+      <div class="variant-label"><span class="tag tag-fit">Strong-Fit</span> Vertical List — scannable, grouped</div>
+      <div class="nav-list">
+        <button class="nav-btn">📊 Dashboard</button><button class="nav-btn">💬 Conversations</button><button class="nav-btn">👥 Contacts</button>
+        <button class="nav-btn">💰 Opportunities</button><button class="nav-btn">⚡ Workflows</button><button class="nav-btn">🔧 Settings</button>
+      </div>
+      <p style="font-size:11px;color:var(--faint);margin-top:12px;line-height:1.5">
+        Single-column list with section icons. Groups: Communication, Revenue, Automation, Config. Easier to scan. Less overwhelming than 26-item grid.
+      </p>
+    </div>
+
+    <!-- C: Command Palette -->
+    <div class="variant">
+      <div class="variant-label"><span class="tag tag-divergent">Divergent</span> Command Palette — search everything</div>
+      <div class="palette-demo" style="width:100%;">
+        <input class="palette-input" placeholder="Search clients, sections, commands..." value="Premier" style="width:100%;">
+        <div class="palette-results">
+          <div class="palette-item selected">
+            <span style="width:22px;height:22px;border-radius:6px;background:var(--accent);flex-shrink:0;"></span>
+            <span>Premier Wellness Florida</span>
+            <span class="key">Dashboard</span>
+          </div>
+          <div class="palette-item">
+            <span style="width:22px;height:22px;border-radius:6px;background:#f59e0b;flex-shrink:0;"></span>
+            <span>Premier Pain Solutions</span>
+            <span class="key">Contacts</span>
+          </div>
+          <div class="palette-item">
+            <span style="color:var(--muted);font-size:17px;">⌨️</span>
+            <span style="color:var(--muted);">Toggle Notes</span>
+            <span class="key">Ctrl+Shift+E</span>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:11px;color:var(--faint);margin-top:12px;line-height:1.5">
+        Ctrl+Shift+E opens a Spotlight/VS Code-style palette. Fuzzy-search clients, sections, commands, and notes. Keyboard-driven. The power-user dream.
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- RECOMMENDATION                            -->
+<!-- ═══════════════════════════════════════════ -->
+<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-top:32px;">
+  <h2 style="margin-bottom:12px;">Recommended Build Order</h2>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;">
+    <thead>
+      <tr style="color:var(--muted);text-align:left;">
+        <th style="padding:8px 12px;border-bottom:1px solid var(--border-soft);">#</th>
+        <th style="padding:8px 12px;border-bottom:1px solid var(--border-soft);">Feature</th>
+        <th style="padding:8px 12px;border-bottom:1px solid var(--border-soft);">Variant</th>
+        <th style="padding:8px 12px;border-bottom:1px solid var(--border-soft);">Effort</th>
+        <th style="padding:8px 12px;border-bottom:1px solid var(--border-soft);">Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:10px 12px;border-bottom:1px solid var(--border-soft);">1</td>
+        <td style="padding:10px 12px;border-bottom:1px solid var(--border-soft);font-weight:600;">Command Palette</td>
+        <td style="padding:10px 12px;border-bottom:1px solid var(--border-soft);"><span class="tag tag-divergent">Divergent</span></td>
+        <td style="padding:10px 12px;border-bottom:1px solid var(--border-soft);">Medium</td>
+        <td style="padding:10px 12px;border-bottom:1px solid var(--border-soft);color:var(--green);">High</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-bottom:1px solid var(--border-soft);">2</td>
+        <td style="padding:10px 12px;border-bottom:1px solid var(--border-soft);font-weight:600;">Chip → Mini Card layout</td>
+        <td style="padding:10px 12px;border-bottom:1px solid var(--border-soft);"><span class="tag tag-fit">Strong-Fit</span></td>
+        <td style="padding:10px 12px;border-bottom:1px solid var(--border-soft);">Low</td>
+        <td style="padding:10px 12px;border-bottom:1px solid var(--border-soft);color:var(--accent);">Medium</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;border-bottom:1px solid var(--border-soft);">3</td>
+        <td style="padding:10px 12px;border-bottom:1px solid var(--border-soft);font-weight:600;">Quick Nav → Icons + Groups</td>
+        <td style="padding:10px 12px;border-bottom:1px solid var(--border-soft);"><span class="tag tag-fit">Strong-Fit</span></td>
+        <td style="padding:10px 12px;border-bottom:1px solid var(--border-soft);">Low</td>
+        <td style="padding:10px 12px;border-bottom:1px solid var(--border-soft);color:var(--accent);">Medium</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 12px;">4</td>
+        <td style="padding:10px 12px;font-weight:600;">Collapsed Chip → badge + pulse</td>
+        <td style="padding:10px 12px;"><span class="tag tag-conservative">Conservative</span></td>
+        <td style="padding:10px 12px;">Low</td>
+        <td style="padding:10px 12px;color:var(--accent);">Medium</td>
+      </tr>
+    </tbody>
+  </table>
+  <p style="font-size:11px;color:var(--muted);margin-top:14px;">
+    The Command Palette (#1) is the standout — it transforms how you navigate between 100+ clients. The rest are iterative polish on already-working surfaces.
+  </p>
+</div>
+
+<!-- Tweaks -->
+<div class="tweaks" id="tweaks">
+  <div style="font-weight:700;font-size:12px;margin-bottom:4px;">Tweaks</div>
+  <label><input type="checkbox" class="tweak-toggle" data-theme="dark" checked><span class="tweak-dot"></span> Dark theme</label>
+  <label><input type="checkbox" class="tweak-toggle" data-theme="high"><span class="tweak-dot"></span> High contrast</label>
+  <label><input type="checkbox" class="tweak-toggle" data-theme="compact"><span class="tweak-dot"></span> Compact spacing</label>
+</div>
+
+<script>
+// Theme toggles
+document.querySelectorAll('.tweak-toggle').forEach(t => {
+  t.addEventListener('change', () => {
+    const root = document.documentElement;
+    if (t.dataset.theme === 'high') {
+      root.style.setProperty('--bg', t.checked ? '#000' : '#07080b');
+      root.style.setProperty('--text', t.checked ? '#fff' : '#e2e8f0');
+      root.style.setProperty('--muted', t.checked ? '#bbb' : '#8899aa');
+      root.style.setProperty('--border', t.checked ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.07)');
+    }
+    if (t.dataset.theme === 'compact') {
+      document.querySelectorAll('.variant').forEach(v => {
+        v.style.padding = t.checked ? '12px' : '20px';
+      });
+      document.querySelectorAll('.variants').forEach(v => {
+        v.style.gap = t.checked ? '8px' : '16px';
+      });
+    }
+  });
+});
+</script>
+
+</body>
+</html>

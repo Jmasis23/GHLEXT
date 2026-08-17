@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auto-Collapse Delay — Feature Summary</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: #0d1117; color: #c9d1d9; padding: 32px; }
+  h1 { font-size: 20px; margin-bottom: 4px; }
+  h2 { font-size: 15px; color: #58a6ff; margin-top: 28px; margin-bottom: 10px; }
+  .card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 20px; margin-bottom: 16px; }
+  .sub { color: #8b949e; font-size: 13px; margin-bottom: 16px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; color: #8b949e; padding: 6px 12px; border-bottom: 1px solid #21262d; font-weight: 500; }
+  td { padding: 8px 12px; border-bottom: 1px solid #21262d12; }
+  .file { color: #58a6ff; font-family: monospace; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+  .badge-ok { background: #0f5323; color: #3fb950; }
+  .badge-new { background: #1a3a5c; color: #58a6ff; }
+  .badge-chg { background: #3d2e00; color: #d2991d; }
+  code { background: #21262d; padding: 1px 5px; border-radius: 3px; font-size: 12.5px; }
+  ul { margin-left: 20px; font-size: 13.5px; line-height: 1.8; }
+  .highlight { color: #e6edf3; font-weight: 600; }
+  .divider { border: none; border-top: 1px solid #21262d; margin: 16px 0; }
+  .flow { display: flex; gap: 8px; align-items: center; font-size: 13px; font-family: monospace; color: #8b949e; margin: 12px 0; }
+  .flow-step { background: #21262d; padding: 6px 10px; border-radius: 4px; }
+  .arrow { color: #58a6ff; }
+</style>
+</head>
+<body>
+
+<h1>⚡ Auto-Collapse Delay — Feature Complete</h1>
+<p class="sub">GHL Tab Renamer v2.0.0 · Settings → General tab</p>
+
+<div class="card">
+  <h2>What changed</h2>
+  <table>
+    <tr>
+      <th style="width:160px">File</th>
+      <th>Change</th>
+      <th style="width:80px">Status</th>
+    </tr>
+    <tr>
+      <td class="file">utils.js</td>
+      <td>Added <code>autoCollapseDelay: 0</code> to DEFAULT_SETTINGS</td>
+      <td><span class="badge badge-ok">PASS</span></td>
+    </tr>
+    <tr>
+      <td class="file">background.js</td>
+      <td>Replaced instant collapse with <code>setTimeout</code> timer. Timer resets on each tab switch. Clears on tab removal.</td>
+      <td><span class="badge badge-ok">PASS</span></td>
+    </tr>
+    <tr>
+      <td class="file">options.html</td>
+      <td>Added <code>&lt;select&gt;</code> dropdown sub-row under Auto-Collapse toggle with 7 options (Instant → 5 min)</td>
+      <td><span class="badge badge-ok">PASS</span></td>
+    </tr>
+    <tr>
+      <td class="file">options.js</td>
+      <td>Bound dropdown via <code>val()</code> + show/hide when toggle changes</td>
+      <td><span class="badge badge-ok">PASS</span></td>
+    </tr>
+  </table>
+</div>
+
+<div class="card">
+  <h2>How it works</h2>
+  <div class="flow">
+    <span class="flow-step">User switches tabs</span>
+    <span class="arrow">→</span>
+    <span class="flow-step">Clear any existing collapse timer</span>
+    <span class="arrow">→</span>
+    <span class="flow-step">Start new timer (N seconds from settings)</span>
+    <span class="arrow">→</span>
+    <span class="flow-step">Timer fires → collapse all other groups</span>
+  </div>
+  
+  <hr class="divider">
+  
+  <ul>
+    <li><span class="highlight">Instant (0s)</span> — same behaviour as before, groups collapse immediately on tab switch</li>
+    <li><span class="highlight">5s / 10s / 30s / 60s / 2m / 5m</span> — wait N seconds before collapsing inactive groups</li>
+    <li>If you switch tabs <em>again</em> before the timer fires, it <strong>resets</strong> — only the group you settle on stays expanded</li>
+    <li>If the active tab is <strong>removed</strong> (closed), the timer is cancelled to avoid collapsing on a dead tab</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h2>UI preview</h2>
+  <p class="sub">The new setting appears directly under the Auto-Collapse toggle in Settings → General, matching the RAM Saver sub-row pattern:</p>
+  
+  <div style="border: 1px solid #21262d; border-radius: 6px; padding: 16px; background: #0d1117;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px">
+      <div>
+        <div style="font-weight:600;font-size:13px">Auto-Collapse Inactive Groups</div>
+        <div style="font-size:11px;color:#8b949e">Collapse other groups when switching tabs to save space</div>
+      </div>
+      <div style="width:40px;height:22px;background:#238636;border-radius:11px"></div>
+    </div>
+    <div style="margin-left:18px;padding-left:18px;border-left:2px solid #30363d;display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="font-weight:600;font-size:12px;color:#c9d1d9">Collapse Delay</div>
+        <div style="font-size:11px;color:#8b949e">How long to wait before collapsing inactive groups</div>
+      </div>
+      <div style="background:#21262d;border:1px solid #30363d;border-radius:4px;padding:4px 10px;font-size:12px;color:#c9d1d9;cursor:pointer">
+        Instant ▼
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Verification</h2>
+  <table>
+    <tr><td>Syntax (<code>node -c</code>)</td><td><span class="badge badge-ok">utils.js ✓</span> <span class="badge badge-ok">background.js ✓</span> <span class="badge badge-ok">options.js ✓</span></td></tr>
+    <tr><td>Runtime (vm sandbox)</td><td><span class="badge badge-ok">utils.js ✓</span> <span class="badge badge-ok">background.js ✓</span> <span class="badge badge-ok">options.js ✓</span></td></tr>
+    <tr><td>Default value</td><td><code>autoCollapseDelay: 0</code> — instant (backward compatible, no behaviour change for existing users)</td></tr>
+    <tr><td>Storage</td><td><code>chrome.storage.sync</code> — persists across devices</td></tr>
+  </table>
+</div>
+
+<p style="color:#8b949e;font-size:12px;margin-top:20px">Ready to reload the extension at <code>chrome://extensions</code> — the new setting will appear in Settings → General.</p>
+
+</body>
+</html>
